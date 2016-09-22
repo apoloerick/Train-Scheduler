@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign-Up Today!</title>
+    <title>Train Schedule</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-    <!-- LINK TO FIREBASE GOES HERE -->
+    <!-- LINK TO FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
 
 </head>
@@ -29,12 +29,23 @@
                     <h3 class="panel-title">Current Train Schedule</h3>
                 </div>
                 <div class="panel-body">
-                        <div id="full-member-list"></div>
+                    <div class="col-md-2" style="font-weight: bold;">Train Name</div>
+                    
+                    <div class="col-md-2" style="font-weight: bold;">Destination</div>
+                    
+                    <div class="col-md-3" style="font-weight: bold;">Frequency</div>
+                    
+                    <div class="col-md-3" style="font-weight: bold;">Next Arrival</div>
+                    
+                    <div class="col-md-2" style="font-weight: bold;">Minutes away</div>
+    
+                    
 
+                    <div id="full-member-list"></div>
 
                 </div>
             </div>
-        </div>
+       
 
         <div class="col-lg-6">
             <div class="panel panel-default">
@@ -54,7 +65,7 @@
                       </div>
                       <div class="form-group">
                         <label for="text">First Train Time(HH:mm-military time)</label>
-                        <input type="number" class="form-control" id="timeinput">
+                        <input type="text/number" class="form-control" id="timeinput">
                       </div>
                       <div class="form-group">
                          <label for="text">Frequency</label>
@@ -65,7 +76,18 @@
                 </div>
             </div>
         </div>
-
+        <!-- styling -->
+        <style>
+            body{
+                background-image: url(http://fullhdpictures.com/wp-content/uploads/2015/09/Train-HD-Wallpaper.jpg);
+            }
+            .jumbotron{
+                color: white;
+                background-image: url(http://sca.blogs.wesleyan.edu/files/middletown-mss002.jpg);
+               
+            }
+        </style>
+        <!-- jquery -->
         <script src="https://code.jquery.com/jquery.js"></script>
 
   <script src="https://www.gstatic.com/firebasejs/3.4.0/firebase.js"></script>
@@ -80,7 +102,7 @@
           };
           firebase.initializeApp(config);
 
-            var dataRef = firebase.database();
+            var traindata = firebase.database();
 
 
             var trainname ="";
@@ -97,7 +119,7 @@
             frequency = $('#frequencyinput').val().trim();
 
             // Code for the push
-            dataRef.ref().push({
+            traindata.ref().push({
                 trainname: trainname,
                 destination: destination,
                 traintime:traintime ,
@@ -107,7 +129,7 @@
             // Don't refresh the page!
             return false;
         });
-            dataRef.ref().on("child_added", function(childSnapshot) {
+            traindata.ref().on("child_added", function(childSnapshot) {
     // Log everything that's coming out of snapshot
     console.log(childSnapshot.val().trainname);
     console.log(childSnapshot.val().destination);
@@ -116,25 +138,21 @@
     console.log(childSnapshot.val().joinDate)
 
  $('#full-member-list').append(
-        "<div class='row-md-3'>" +
-            "<div class='col-md-3' id='trainname'> " + childSnapshot.val().trainname + " </div>" +
-            "<div class='col-md-3' id='destination'> " + childSnapshot.val().destination + " </div>" +
-            "<div class='col-md-3' id='traintime'> " + childSnapshot.val().traintime + " </div>" +
-            "<div class='col-md-3' id='frequency'> " + childSnapshot.val().frequency + " </div>" +
+        "<div class='row-md-12'>" +
+            "<div class='col-md-2' id='trainname'> " + childSnapshot.val().trainname + " </div>" +
+            "<div class='col-md-2' id='destination'> " + childSnapshot.val().destination + " </div>" +
+            "<div class='col-md-3' id='traintime'> " + childSnapshot.val().frequency + " </div>" +
+            "<div class='col-md-3' id='frequency'> " + childSnapshot.val().traintime + " </div>" +
+             "<div class='col-md-2' id='minutesaway'> " + childSnapshot.val().frequency + " </div>" +
         "</div>"
+         // moment().format(mm-military)
     );
            
          }, function(errorObject){
             console.log("Errors handled: " + errorObject.code)
         });
 
-//             dataRef.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot){
-//     // Change the HTML to reflect
-//     $("#namedisplay").html(snapshot.val().name);
-//     $("#emaildisplay").html(snapshot.val().email);
-//     $("#agedisplay").html(snapshot.val().age);
-//     $("#commentdisplay").html(snapshot.val().comment);
-// })
+
 
     </script>
 </div>
